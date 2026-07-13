@@ -7,7 +7,6 @@ import lombok.Getter;
 
 @Getter
 public class Member {
-
 	private String email;
 
 	private String nickname;
@@ -16,11 +15,21 @@ public class Member {
 
 	private MemberStatus status;
 
-	public Member(String email, String nickname, String passwordHash) {
+	private Member(String email, String nickname, String passwordHash) {
 		this.email = requireNonNull(email);
 		this.nickname = requireNonNull(nickname);
 		this.passwordHash = requireNonNull(passwordHash);
+
 		this.status = MemberStatus.PENDING;
+	}
+
+	public static Member create(
+		String email,
+		String nickname,
+		String password,
+		PasswordEncoder passwordEncoder
+	) {
+		return new Member(email, nickname, passwordEncoder.encode(password));
 	}
 
 	public void activate() {
@@ -35,4 +44,15 @@ public class Member {
 		this.status = MemberStatus.DEACTIVATED;
 	}
 
+	public boolean verifyPassword(String password, PasswordEncoder passwordEncoder) {
+		return passwordEncoder.matches(password, this.passwordHash);
+	}
+
+	public void changeNickname(String newNickname) {
+		this.nickname = newNickname;
+	}
+
+	public void changePassword(String newPassword, PasswordEncoder passwordEncoder) {
+		this.passwordHash = passwordEncoder.encode(newPassword);
+	}
 }

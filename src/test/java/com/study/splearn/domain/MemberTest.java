@@ -7,47 +7,39 @@ import org.junit.jupiter.api.Test;
 
 class MemberTest {
 
+	private static final PasswordEncoder passwordEncoder = new PasswordEncoder() {
+		@Override
+		public String encode(String password) {
+			return password.toUpperCase();
+		}
+
+		@Override
+		public boolean matches(String password, String passwordHash) {
+			return encode(password).equals(passwordHash);
+		}
+	};
+
 	@Test
 	@DisplayName("멤버 생성")
 	void test1() {
-		var member = new Member(
+		var member = Member.create(
 			"test@test.com",
 			"nickname",
-			"password"
+			"password",
+			passwordEncoder
 		);
 
 		assertThat(member.getStatus()).isEqualTo(MemberStatus.PENDING);
 	}
 
 	@Test
-	@DisplayName("NPE 테스트")
-	void test2() {
-		assertThatThrownBy(() -> new Member(
-			null,
-			"nickname",
-			"password"
-		)).isInstanceOf(NullPointerException.class);
-
-		assertThatThrownBy(() -> new Member(
-			"test@test.com",
-			null,
-			"password"
-		)).isInstanceOf(NullPointerException.class);
-
-		assertThatThrownBy(() -> new Member(
-			"test@test.com",
-			"nickname",
-			null
-		)).isInstanceOf(NullPointerException.class);
-	}
-
-	@Test
 	@DisplayName("멤버 가입 완료")
 	void test3() {
-		var member = new Member(
+		var member = Member.create(
 			"test@test.com",
 			"nickname",
-			"password"
+			"password",
+			passwordEncoder
 		);
 
 		member.activate();
@@ -59,10 +51,11 @@ class MemberTest {
 	@Test
 	@DisplayName("멤버 가입 완료 실패")
 	void test12() {
-		var member = new Member(
+		var member = Member.create(
 			"test@test.com",
 			"nickname",
-			"password"
+			"password",
+			passwordEncoder
 		);
 		member.activate();
 
@@ -73,10 +66,11 @@ class MemberTest {
 	@Test
 	@DisplayName("멤버 탈퇴")
 	void test132() {
-		var member = new Member(
+		var member = Member.create(
 			"test@test.com",
 			"nickname",
-			"password"
+			"password",
+			passwordEncoder
 		);
 		member.activate();
 
@@ -89,10 +83,11 @@ class MemberTest {
 	@Test
 	@DisplayName("멤버 탈퇴 실패")
 	void test123() {
-		var member = new Member(
+		var member = Member.create(
 			"test@test.com",
 			"nickname",
-			"password"
+			"password",
+			passwordEncoder
 		);
 
 		assertThatThrownBy(member::deactivate)
@@ -103,6 +98,53 @@ class MemberTest {
 
 		assertThatThrownBy(member::deactivate)
 			.isInstanceOf(IllegalStateException.class);
+	}
+
+	@Test
+	@DisplayName("비밀번호 검증")
+	void test129() {
+		var member = Member.create(
+			"test@test.com",
+			"nickname",
+			"password",
+			passwordEncoder
+		);
+
+		assertThat(member.verifyPassword("password", passwordEncoder)).isTrue();
+		assertThat(member.verifyPassword("wrong", passwordEncoder)).isFalse();
+	}
+
+	@Test
+	@DisplayName("닉네임 변경")
+	void test1298() {
+		var member = Member.create(
+			"test@test.com",
+			"nickname",
+			"password",
+			passwordEncoder
+		);
+		member.activate();
+
+		member.changeNickname("newNickname");
+
+		assertThat(member.getNickname()).isEqualTo("newNickname");
+	}
+
+	@Test
+	@DisplayName("비밀번호 변경")
+	void test254() {
+		var member = Member.create(
+			"test@test.com",
+			"nickname",
+			"password",
+			passwordEncoder
+		);
+		member.activate();
+
+		member.changePassword("newPassword", passwordEncoder);
+
+		assertThat(member.verifyPassword("newPassword", passwordEncoder)).isTrue();
+		assertThat(member.verifyPassword("password", passwordEncoder)).isFalse();
 	}
 
 }
