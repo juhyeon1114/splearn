@@ -2,6 +2,9 @@ package com.study.splearn.domain;
 
 import static org.springframework.util.Assert.*;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public record Email(
 	String address
 ) {

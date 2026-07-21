@@ -7,23 +7,8 @@ import org.junit.jupiter.api.Test;
 
 class MemberTest {
 
-	private final MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(
-		"test@test.com",
-		"nickname",
-		"password"
-	);
-
-	private static final PasswordEncoder passwordEncoder = new PasswordEncoder() {
-		@Override
-		public String encode(String password) {
-			return password.toUpperCase();
-		}
-
-		@Override
-		public boolean matches(String password, String passwordHash) {
-			return encode(password).equals(passwordHash);
-		}
-	};
+	private static final MemberRegisterRequest memberRegisterRequest = MemberFixture.createMemberRegisterRequest();
+	private static final PasswordEncoder passwordEncoder = MemberFixture.createPasswordEncoder();
 
 	@Test
 	@DisplayName("멤버 생성")

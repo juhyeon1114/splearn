@@ -3,19 +3,34 @@ package com.study.splearn.domain;
 import static java.util.Objects.*;
 import static org.springframework.util.Assert.*;
 
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Embedded
 	private Email email;
 
 	private String nickname;
 
 	private String passwordHash;
 
+	@Enumerated(EnumType.STRING)
 	private MemberStatus status;
 
 	public static Member register(
