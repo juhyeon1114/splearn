@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 class MemberTest {
 
-	private final MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+	private final MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(
 		"test@test.com",
 		"nickname",
 		"password"
@@ -28,8 +28,8 @@ class MemberTest {
 	@Test
 	@DisplayName("멤버 생성")
 	void test1() {
-		var member = Member.create(
-			memberCreateRequest,
+		var member = Member.register(
+			memberRegisterRequest,
 			passwordEncoder
 		);
 
@@ -39,8 +39,8 @@ class MemberTest {
 	@Test
 	@DisplayName("멤버 가입 완료")
 	void test3() {
-		var member = Member.create(
-			memberCreateRequest,
+		var member = Member.register(
+			memberRegisterRequest,
 			passwordEncoder
 		);
 
@@ -53,8 +53,8 @@ class MemberTest {
 	@Test
 	@DisplayName("멤버 가입 완료 실패")
 	void test12() {
-		var member = Member.create(
-			memberCreateRequest,
+		var member = Member.register(
+			memberRegisterRequest,
 			passwordEncoder
 		);
 		member.activate();
@@ -66,8 +66,8 @@ class MemberTest {
 	@Test
 	@DisplayName("멤버 탈퇴")
 	void test132() {
-		var member = Member.create(
-			memberCreateRequest,
+		var member = Member.register(
+			memberRegisterRequest,
 			passwordEncoder
 		);
 		member.activate();
@@ -81,8 +81,8 @@ class MemberTest {
 	@Test
 	@DisplayName("멤버 탈퇴 실패")
 	void test123() {
-		var member = Member.create(
-			memberCreateRequest,
+		var member = Member.register(
+			memberRegisterRequest,
 			passwordEncoder
 		);
 
@@ -99,8 +99,8 @@ class MemberTest {
 	@Test
 	@DisplayName("비밀번호 검증")
 	void test129() {
-		var member = Member.create(
-			memberCreateRequest,
+		var member = Member.register(
+			memberRegisterRequest,
 			passwordEncoder
 		);
 
@@ -111,8 +111,8 @@ class MemberTest {
 	@Test
 	@DisplayName("닉네임 변경")
 	void test1298() {
-		var member = Member.create(
-			memberCreateRequest,
+		var member = Member.register(
+			memberRegisterRequest,
 			passwordEncoder
 		);
 		member.activate();
@@ -125,8 +125,8 @@ class MemberTest {
 	@Test
 	@DisplayName("비밀번호 변경")
 	void test254() {
-		var member = Member.create(
-			memberCreateRequest,
+		var member = Member.register(
+			memberRegisterRequest,
 			passwordEncoder
 		);
 		member.activate();
@@ -140,8 +140,8 @@ class MemberTest {
 	@Test
 	@DisplayName("올바르지 않은 이메일")
 	void test0123() {
-		assertThatThrownBy(() -> Member.create(
-			new MemberCreateRequest("invalid", "nickname", "password"),
+		assertThatThrownBy(() -> Member.register(
+			new MemberRegisterRequest("invalid", "nickname", "password"),
 			passwordEncoder
 		)).isInstanceOf(IllegalArgumentException.class);
 

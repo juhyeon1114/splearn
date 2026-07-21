@@ -18,15 +18,15 @@ public class Member {
 
 	private MemberStatus status;
 
-	public static Member create(
-		MemberCreateRequest memberCreateRequest,
+	public static Member register(
+		MemberRegisterRequest memberRegisterRequest,
 		PasswordEncoder passwordEncoder
 	) {
 		var member = new Member();
 
-		member.email = new Email(requireNonNull(memberCreateRequest.email()));
-		member.nickname = requireNonNull(memberCreateRequest.nickname());
-		member.passwordHash = passwordEncoder.encode(requireNonNull(memberCreateRequest.password()));
+		member.email = new Email(requireNonNull(memberRegisterRequest.email()));
+		member.nickname = requireNonNull(memberRegisterRequest.nickname());
+		member.passwordHash = passwordEncoder.encode(requireNonNull(memberRegisterRequest.password()));
 
 		member.status = MemberStatus.PENDING;
 
