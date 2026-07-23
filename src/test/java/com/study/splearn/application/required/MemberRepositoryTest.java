@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import com.study.splearn.domain.Member;
 
@@ -33,6 +34,21 @@ class MemberRepositoryTest {
 		assertThat(member.getId()).isNotNull();
 
 		entityManager.flush();
+	}
+
+	@Test
+	@DisplayName("이메일 중복 시 등록 실패")
+	void test12() {
+		var member1 = Member.register(createMemberRegisterRequest(), createPasswordEncoder());
+		memberRepository.save(member1);
+		entityManager.flush();
+
+		var member2 = Member.register(createMemberRegisterRequest(), createPasswordEncoder());
+
+		assertThatThrownBy(() -> {
+			memberRepository.save(member2);
+			entityManager.flush();
+		}).isInstanceOf(DataIntegrityViolationException.class);
 	}
 
 }

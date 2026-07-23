@@ -3,6 +3,8 @@ package com.study.splearn.domain;
 import static java.util.Objects.*;
 import static org.springframework.util.Assert.*;
 
+import org.hibernate.annotations.NaturalId;
+
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,6 +25,7 @@ public class Member {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NaturalId
 	@Embedded
 	private Email email;
 
