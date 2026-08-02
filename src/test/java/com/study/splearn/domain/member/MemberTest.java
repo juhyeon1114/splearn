@@ -1,4 +1,4 @@
-package com.study.splearn.domain;
+package com.study.splearn.domain.member;
 
 import static org.assertj.core.api.Assertions.*;
 

@@ -1,4 +1,4 @@
-package com.study.splearn.application.provided;
+package com.study.splearn.application.member.provided;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.study.splearn.SplearnTestConfiguration;
-import com.study.splearn.domain.DuplicateEmailException;
-import com.study.splearn.domain.MemberFixture;
-import com.study.splearn.domain.MemberRegisterRequest;
-import com.study.splearn.domain.MemberStatus;
+import com.study.splearn.domain.member.DuplicateEmailException;
+import com.study.splearn.domain.member.MemberFixture;
+import com.study.splearn.domain.member.MemberRegisterRequest;
+import com.study.splearn.domain.member.MemberStatus;
 
 import jakarta.validation.ConstraintViolationException;
 

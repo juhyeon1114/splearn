@@ -1,11 +1,11 @@
-package com.study.splearn.application.required;
+package com.study.splearn.application.member.required;
 
 import java.util.Optional;
 
 import org.springframework.data.repository.Repository;
 
-import com.study.splearn.domain.Email;
-import com.study.splearn.domain.Member;
+import com.study.splearn.domain.shared.Email;
+import com.study.splearn.domain.member.Member;
 
 /**
  * 회원 정보를 저장하거나 조회한다.

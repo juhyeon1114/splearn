@@ -1,18 +1,18 @@
-package com.study.splearn.application;
+package com.study.splearn.application.member;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import com.study.splearn.application.provided.MemberFinder;
-import com.study.splearn.application.provided.MemberRegister;
-import com.study.splearn.application.required.EmailSender;
-import com.study.splearn.application.required.MemberRepository;
-import com.study.splearn.domain.DuplicateEmailException;
-import com.study.splearn.domain.Email;
-import com.study.splearn.domain.Member;
-import com.study.splearn.domain.MemberRegisterRequest;
-import com.study.splearn.domain.PasswordEncoder;
+import com.study.splearn.application.member.provided.MemberFinder;
+import com.study.splearn.application.member.provided.MemberRegister;
+import com.study.splearn.application.member.required.EmailSender;
+import com.study.splearn.application.member.required.MemberRepository;
+import com.study.splearn.domain.member.DuplicateEmailException;
+import com.study.splearn.domain.shared.Email;
+import com.study.splearn.domain.member.Member;
+import com.study.splearn.domain.member.MemberRegisterRequest;
+import com.study.splearn.domain.member.PasswordEncoder;
 
 import lombok.RequiredArgsConstructor;
 

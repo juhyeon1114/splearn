@@ -1,6 +1,6 @@
-package com.study.splearn.application.required;
+package com.study.splearn.application.member.required;
 
-import static com.study.splearn.domain.MemberFixture.*;
+import static com.study.splearn.domain.member.MemberFixture.*;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import com.study.splearn.domain.Member;
+import com.study.splearn.domain.member.Member;
 
 import jakarta.persistence.EntityManager;
 

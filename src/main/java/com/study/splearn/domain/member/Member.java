@@ -1,40 +1,52 @@
-package com.study.splearn.domain;
+package com.study.splearn.domain.member;
 
 import static java.util.Objects.*;
 import static org.springframework.util.Assert.*;
 
 import org.hibernate.annotations.NaturalId;
 
+import com.study.splearn.domain.AbstractEntity;
+import com.study.splearn.domain.shared.Email;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@Table(
+	name = "member",
+	uniqueConstraints = @UniqueConstraint(name = "uk_member_email_address", columnNames = "email_address")
+)
+@ToString(callSuper = true)
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+public class Member extends AbstractEntity {
 
 	@NaturalId
 	@Embedded
 	private Email email;
 
+	@Column(length = 100, nullable = false)
 	private String nickname;
 
+	@Column(length = 200, nullable = false)
 	private String passwordHash;
 
+	@Column(length = 50, nullable = false)
 	@Enumerated(EnumType.STRING)
 	private MemberStatus status;
+
+	@OneToOne
+	private MemberDetail detail;
 
 	public static Member register(
 		MemberRegisterRequest memberRegisterRequest,

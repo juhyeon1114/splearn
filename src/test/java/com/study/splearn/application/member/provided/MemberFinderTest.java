@@ -1,4 +1,4 @@
-package com.study.splearn.application.provided;
+package com.study.splearn.application.member.provided;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.study.splearn.SplearnTestConfiguration;
-import com.study.splearn.domain.MemberFixture;
+import com.study.splearn.domain.member.MemberFixture;
 
 @SpringBootTest
 @Transactional
