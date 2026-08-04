@@ -3,16 +3,20 @@ package com.study.splearn.domain.member;
 import static java.util.Objects.*;
 import static org.springframework.util.Assert.*;
 
+import java.util.Objects;
+
 import org.hibernate.annotations.NaturalId;
 
 import com.study.splearn.domain.AbstractEntity;
 import com.study.splearn.domain.shared.Email;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -25,7 +29,7 @@ import lombok.ToString;
 	name = "member",
 	uniqueConstraints = @UniqueConstraint(name = "uk_member_email_address", columnNames = "email_address")
 )
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = "detail")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -45,7 +49,7 @@ public class Member extends AbstractEntity {
 	@Enumerated(EnumType.STRING)
 	private MemberStatus status;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private MemberDetail detail;
 
 	public static Member register(
@@ -60,6 +64,8 @@ public class Member extends AbstractEntity {
 
 		member.status = MemberStatus.PENDING;
 
+		member.detail = MemberDetail.create();
+
 		return member;
 	}
 
@@ -67,12 +73,14 @@ public class Member extends AbstractEntity {
 		state(this.status == MemberStatus.PENDING, "PENDING 상태가 아닙니다.");
 
 		this.status = MemberStatus.ACTIVE;
+		this.detail.activate();
 	}
 
 	public void deactivate() {
 		state(this.status == MemberStatus.ACTIVE, "ACTIVE 상태가 아닙니다.");
 
 		this.status = MemberStatus.DEACTIVATED;
+		this.detail.deactivate();
 	}
 
 	public boolean verifyPassword(String password, PasswordEncoder passwordEncoder) {
@@ -81,6 +89,14 @@ public class Member extends AbstractEntity {
 
 	public void changeNickname(String newNickname) {
 		this.nickname = requireNonNull(newNickname);
+	}
+
+	public void updateInfo(MemberInfoUpdateRequest updateRequest) {
+		state(getStatus() == MemberStatus.ACTIVE, "등록 완료 상태가 아니면 정보를 수정할 수 없습니다");
+
+		this.nickname = Objects.requireNonNull(updateRequest.nickname());
+
+		this.detail.updateInfo(updateRequest);
 	}
 
 	public void changePassword(String newPassword, PasswordEncoder passwordEncoder) {

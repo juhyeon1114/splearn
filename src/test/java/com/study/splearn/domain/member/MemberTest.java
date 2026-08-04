@@ -19,6 +19,7 @@ class MemberTest {
 		);
 
 		assertThat(member.getStatus()).isEqualTo(MemberStatus.PENDING);
+		assertThat(member.getDetail().getRegisteredAt()).isNotNull();
 	}
 
 	@Test
@@ -129,7 +130,21 @@ class MemberTest {
 			new MemberRegisterRequest("invalid", "nickname", "password"),
 			passwordEncoder
 		)).isInstanceOf(IllegalArgumentException.class);
+	}
 
+	@Test
+	@DisplayName("업데이트 Info")
+	void test112312() {
+		var member = Member.register(
+			memberRegisterRequest,
+			passwordEncoder
+		);
+		member.activate();
+		member.updateInfo(new MemberInfoUpdateRequest("newNickname", "profile123", "자기소개"));
+
+		assertThat(member.getNickname()).isEqualTo("newNickname");
+		assertThat(member.getDetail().getProfile().address()).isEqualTo("profile123");
+		assertThat(member.getDetail().getIntroduction()).isEqualTo("자기소개");
 	}
 
 }
