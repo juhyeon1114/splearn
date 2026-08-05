@@ -140,11 +140,11 @@ class MemberTest {
 			passwordEncoder
 		);
 		member.activate();
-		member.updateInfo(new MemberInfoUpdateRequest("newNickname", "profile123", "자기소개"));
+		member.updateInfo(MemberFixture.createMemberInfoUpdateRequest());
 
-		assertThat(member.getNickname()).isEqualTo("newNickname");
-		assertThat(member.getDetail().getProfile().address()).isEqualTo("profile123");
-		assertThat(member.getDetail().getIntroduction()).isEqualTo("자기소개");
+		assertThat(member.getNickname()).isEqualTo(MemberFixture.MEMBER_NICKNAME);
+		assertThat(member.getDetail().getProfile().address()).isEqualTo(MemberFixture.MEMBER_PROFILE_ADDRESS);
+		assertThat(member.getDetail().getIntroduction()).isEqualTo(MemberFixture.MEMBER_INTRODUCTION);
 	}
 
 }

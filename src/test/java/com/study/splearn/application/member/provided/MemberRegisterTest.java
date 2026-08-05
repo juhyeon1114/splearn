@@ -55,6 +55,35 @@ record MemberRegisterTest(
 	}
 
 	@Test
+	@DisplayName("멤버 비활성화")
+	void test123123() {
+		var member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
+
+		memberRegister.activate(member.getId());
+
+		assertThat(member.getDetail().getDeactivatedAt()).isNull();
+
+		memberRegister.deactivate(member.getId());
+
+		assertThat(member.getStatus()).isEqualTo(MemberStatus.DEACTIVATED);
+		assertThat(member.getDetail().getDeactivatedAt()).isNotNull();
+	}
+
+	@Test
+	@DisplayName("멤버 정보 수정")
+	void test123123123() {
+		var member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
+
+		memberRegister.activate(member.getId());
+
+		memberRegister.updateInfo(member.getId(), MemberFixture.createMemberInfoUpdateRequest());
+
+		assertThat(member.getNickname()).isEqualTo(MemberFixture.MEMBER_NICKNAME);
+		assertThat(member.getDetail().getProfile().address()).isEqualTo(MemberFixture.MEMBER_PROFILE_ADDRESS);
+		assertThat(member.getDetail().getIntroduction()).isEqualTo(MemberFixture.MEMBER_INTRODUCTION);
+	}
+
+	@Test
 	@DisplayName("멤버 등록 Validation 테스트")
 	void test1023() {
 		// Invalid email format

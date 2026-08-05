@@ -9,10 +9,11 @@ import com.study.splearn.application.member.provided.MemberRegister;
 import com.study.splearn.application.member.required.EmailSender;
 import com.study.splearn.application.member.required.MemberRepository;
 import com.study.splearn.domain.member.DuplicateEmailException;
-import com.study.splearn.domain.shared.Email;
 import com.study.splearn.domain.member.Member;
+import com.study.splearn.domain.member.MemberInfoUpdateRequest;
 import com.study.splearn.domain.member.MemberRegisterRequest;
 import com.study.splearn.domain.member.PasswordEncoder;
+import com.study.splearn.domain.shared.Email;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,6 +46,24 @@ public class MemberModifyService implements MemberRegister {
 		var member = memberFinder.find(memberId);
 
 		member.activate();
+
+		return memberRepository.save(member);
+	}
+
+	@Override
+	public Member deactivate(Long memberId) {
+		var member = memberFinder.find(memberId);
+
+		member.deactivate();
+
+		return memberRepository.save(member);
+	}
+
+	@Override
+	public Member updateInfo(Long memberId, MemberInfoUpdateRequest memberInfoUpdateRequest) {
+		var member = memberFinder.find(memberId);
+
+		member.updateInfo(memberInfoUpdateRequest);
 
 		return memberRepository.save(member);
 	}

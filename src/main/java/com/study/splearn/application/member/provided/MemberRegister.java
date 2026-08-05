@@ -1,6 +1,7 @@
 package com.study.splearn.application.member.provided;
 
 import com.study.splearn.domain.member.Member;
+import com.study.splearn.domain.member.MemberInfoUpdateRequest;
 import com.study.splearn.domain.member.MemberRegisterRequest;
 
 import jakarta.validation.Valid;
@@ -13,5 +14,9 @@ public interface MemberRegister {
 	Member register(@Valid MemberRegisterRequest memberRegisterRequest);
 
 	Member activate(Long memberId);
+
+	Member deactivate(Long memberId);
+
+	Member updateInfo(Long memberId, @Valid MemberInfoUpdateRequest memberInfoUpdateRequest);
 
 }
