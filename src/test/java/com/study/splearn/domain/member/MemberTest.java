@@ -147,4 +147,16 @@ class MemberTest {
 		assertThat(member.getDetail().getIntroduction()).isEqualTo(MemberFixture.MEMBER_INTRODUCTION);
 	}
 
+	@Test
+	@DisplayName("업데이트 Info 실패 - PENDING 상태")
+	void test112313() {
+		var member = Member.register(
+			memberRegisterRequest,
+			passwordEncoder
+		);
+
+		assertThatThrownBy(() -> member.updateInfo(MemberFixture.createMemberInfoUpdateRequest()))
+			.isInstanceOf(IllegalStateException.class);
+	}
+
 }

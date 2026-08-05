@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.study.splearn.SplearnTestConfiguration;
 import com.study.splearn.domain.member.DuplicateEmailException;
+import com.study.splearn.domain.member.DuplicateProfileException;
 import com.study.splearn.domain.member.MemberFixture;
 import com.study.splearn.domain.member.MemberRegisterRequest;
 import com.study.splearn.domain.member.MemberStatus;
@@ -81,6 +82,23 @@ record MemberRegisterTest(
 		assertThat(member.getNickname()).isEqualTo(MemberFixture.MEMBER_NICKNAME);
 		assertThat(member.getDetail().getProfile().address()).isEqualTo(MemberFixture.MEMBER_PROFILE_ADDRESS);
 		assertThat(member.getDetail().getIntroduction()).isEqualTo(MemberFixture.MEMBER_INTRODUCTION);
+	}
+
+	@Test
+	@DisplayName("멤버 정보 수정 실패")
+	void test12312223() {
+		var member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
+		var member2 = memberRegister.register(MemberFixture.createMemberRegisterRequest2());
+
+		memberRegister.activate(member.getId());
+		memberRegister.activate(member2.getId());
+
+		memberRegister.updateInfo(member.getId(), MemberFixture.createMemberInfoUpdateRequest());
+
+		assertThatThrownBy(() -> memberRegister.updateInfo(member2.getId(), MemberFixture.createMemberInfoUpdateRequest()))
+			.isInstanceOf(DuplicateProfileException.class);
+
+		memberRegister.updateInfo(member.getId(), MemberFixture.createMemberInfoUpdateRequest2());
 	}
 
 	@Test
