@@ -11,7 +11,7 @@ import com.study.splearn.domain.member.PasswordEncoder;
 public class SplearnTestConfiguration {
 	@Bean
 	public EmailSender emailSender() {
-		return (email, subject, body) -> System.out.printf("email: %s, subject: %s, body: %s", email, subject, body);
+		return (email, subject, body) -> System.out.printf("emailAddress: %s, subject: %s, body: %s", email, subject, body);
 	}
 
 	@Bean

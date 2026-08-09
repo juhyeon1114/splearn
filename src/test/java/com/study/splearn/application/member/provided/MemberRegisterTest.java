@@ -104,9 +104,9 @@ record MemberRegisterTest(
 	@Test
 	@DisplayName("멤버 등록 Validation 테스트")
 	void test1023() {
-		// Invalid email format
+		// Invalid emailAddress format
 		assertThatThrownBy(() -> memberRegister.register(
-			new MemberRegisterRequest("invalid-email", "password123", "John Doe")
+			new MemberRegisterRequest("invalid-emailAddress", "password123", "John Doe")
 		)).isInstanceOf(ConstraintViolationException.class);
 	}
 
