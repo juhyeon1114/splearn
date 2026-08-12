@@ -18,7 +18,7 @@ import com.study.splearn.adapter.webapi.dto.MemberRegisterResponse;
 import com.study.splearn.application.member.provided.MemberRegister;
 import com.study.splearn.domain.member.Member;
 import com.study.splearn.domain.member.MemberFixture;
-import com.study.splearn.domain.member.MemberRegisterRequest;
+import com.study.splearn.application.member.provided.MemberRegisterRequest;
 
 import tools.jackson.databind.ObjectMapper;
 
@@ -101,7 +101,7 @@ record MemberWebMvcApiTest(
 	 * 등록 직후의 멤버를 흉내낸다. 영속화를 거치지 않으므로 id는 직접 넣어준다.
 	 */
 	private Member createRegisteredMember(MemberRegisterRequest request, Long id) {
-		var member = Member.register(request, MemberFixture.createPasswordEncoder());
+		var member = Member.register(request.toInfo(), MemberFixture.createPasswordEncoder());
 		ReflectionTestUtils.setField(member, "id", id);
 		return member;
 	}

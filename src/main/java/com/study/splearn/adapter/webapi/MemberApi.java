@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.study.splearn.adapter.webapi.dto.MemberRegisterResponse;
 import com.study.splearn.application.member.provided.MemberRegister;
-import com.study.splearn.domain.member.MemberRegisterRequest;
+import com.study.splearn.application.member.provided.MemberRegisterRequest;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

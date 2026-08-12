@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.study.splearn.adapter.webapi.dto.MemberRegisterResponse;
 import com.study.splearn.application.member.required.MemberRepository;
 import com.study.splearn.domain.member.MemberFixture;
-import com.study.splearn.domain.member.MemberRegisterRequest;
+import com.study.splearn.application.member.provided.MemberRegisterRequest;
 import com.study.splearn.domain.member.MemberStatus;
 import com.study.splearn.domain.shared.Email;
 

@@ -1,5 +1,7 @@
 package com.study.splearn.domain.member;
 
+import com.study.splearn.application.member.provided.MemberRegisterRequest;
+
 public class MemberFixture {
 
 	public static final String MEMBER_NICKNAME = "newNickname";

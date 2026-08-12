@@ -12,7 +12,7 @@ import com.study.splearn.domain.member.DuplicateEmailException;
 import com.study.splearn.domain.member.DuplicateProfileException;
 import com.study.splearn.domain.member.Member;
 import com.study.splearn.domain.member.MemberInfoUpdateRequest;
-import com.study.splearn.domain.member.MemberRegisterRequest;
+import com.study.splearn.application.member.provided.MemberRegisterRequest;
 import com.study.splearn.domain.member.PasswordEncoder;
 import com.study.splearn.domain.member.Profile;
 import com.study.splearn.domain.shared.Email;
@@ -36,7 +36,7 @@ public class MemberModifyService implements MemberRegister {
 	public Member register(MemberRegisterRequest memberRegisterRequest) {
 		checkDuplicateEmail(memberRegisterRequest);
 
-		var member = Member.register(memberRegisterRequest, passwordEncoder);
+		var member = Member.register(memberRegisterRequest.toInfo(), passwordEncoder);
 
 		memberRepository.save(member);
 

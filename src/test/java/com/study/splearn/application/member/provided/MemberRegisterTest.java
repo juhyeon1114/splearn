@@ -12,7 +12,6 @@ import com.study.splearn.SplearnTestConfiguration;
 import com.study.splearn.domain.member.DuplicateEmailException;
 import com.study.splearn.domain.member.DuplicateProfileException;
 import com.study.splearn.domain.member.MemberFixture;
-import com.study.splearn.domain.member.MemberRegisterRequest;
 import com.study.splearn.domain.member.MemberStatus;
 
 import jakarta.validation.ConstraintViolationException;

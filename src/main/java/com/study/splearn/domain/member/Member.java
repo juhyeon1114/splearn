@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import org.hibernate.annotations.NaturalId;
 
+import com.study.splearn.application.member.provided.MemberRegisterRequest;
 import com.study.splearn.domain.AbstractEntity;
 import com.study.splearn.domain.shared.Email;
 
@@ -53,14 +54,14 @@ public class Member extends AbstractEntity {
 	private MemberDetail detail;
 
 	public static Member register(
-		MemberRegisterRequest memberRegisterRequest,
+		MemberRegisterInfo memberRegisterInfo,
 		PasswordEncoder passwordEncoder
 	) {
 		var member = new Member();
 
-		member.email = new Email(requireNonNull(memberRegisterRequest.email()));
-		member.nickname = requireNonNull(memberRegisterRequest.nickname());
-		member.passwordHash = passwordEncoder.encode(requireNonNull(memberRegisterRequest.password()));
+		member.email = new Email(requireNonNull(memberRegisterInfo.email()));
+		member.nickname = requireNonNull(memberRegisterInfo.nickname());
+		member.passwordHash = passwordEncoder.encode(requireNonNull(memberRegisterInfo.password()));
 
 		member.status = MemberStatus.PENDING;
 

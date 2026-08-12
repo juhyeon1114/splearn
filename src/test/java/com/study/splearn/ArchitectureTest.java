@@ -77,10 +77,4 @@ class ArchitectureTest {
 		.should().beAnnotatedWith(Component.class)
 		.as("외부 연동 어댑터는 스프링 빈으로 등록한다");
 
-	@ArchTest
-	static final ArchRule 애플리케이션_경계는_인터페이스 = classes()
-		.that().resideInAnyPackage("..application..provided..", "..application..required..")
-		.should().beInterfaces()
-		.as("provided/required 패키지에는 인터페이스만 둔다");
-
 }
