@@ -49,4 +49,15 @@ public class MemberFixture {
 		return new MemberInfoUpdateRequest(MEMBER_NICKNAME_2, MEMBER_PROFILE_ADDRESS_2, MEMBER_INTRODUCTION_2);
 	}
 
+	public static Member createPendingMember() {
+		var memberRegisterRequest = MemberFixture.createMemberRegisterRequest();
+		return Member.register(memberRegisterRequest.toInfo(), createPasswordEncoder());
+	}
+
+	public static Member createActiveMember() {
+		var member = createPendingMember();
+		member.activate();
+		return member;
+	}
+
 }
