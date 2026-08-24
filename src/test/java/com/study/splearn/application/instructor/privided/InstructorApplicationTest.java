@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.study.splearn.application.instructor.required.InstructorRepository;
 import com.study.splearn.application.member.required.MemberRepository;
 import com.study.splearn.domain.instructor.Instructor;
+import com.study.splearn.domain.instructor.InstructorFixture;
 import com.study.splearn.domain.instructor.InstructorStatus;
 import com.study.splearn.domain.member.MemberFixture;
 
@@ -29,7 +30,7 @@ class InstructorApplicationTest {
 		var activeMember = MemberFixture.createActiveMember();
 		var member = memberRepository.save(activeMember);
 
-		return instructorApplication.apply(new InstructorApplyRequest(member.getId()));
+		return instructorApplication.apply(InstructorFixture.createApplyRequest(member));
 	}
 
 	@Test
@@ -51,9 +52,10 @@ class InstructorApplicationTest {
 		var activeMember = MemberFixture.createActiveMember();
 		var member = memberRepository.save(activeMember);
 
-		instructorApplication.apply(new InstructorApplyRequest(member.getId()));
-		assertThatThrownBy(() -> instructorApplication.apply(new InstructorApplyRequest(member.getId())))
-			.isInstanceOf(DataIntegrityViolationException.class);
+		instructorApplication.apply(InstructorFixture.createApplyRequest(member));
+
+		assertThatThrownBy(() -> instructorApplication.apply(InstructorFixture.createApplyRequest(member)))
+			.isInstanceOf(DuplicateInstructorApplicationException.class);
 	}
 
 	@Test

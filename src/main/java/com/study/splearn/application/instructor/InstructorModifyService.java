@@ -1,15 +1,18 @@
 package com.study.splearn.application.instructor;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import com.study.splearn.application.instructor.privided.DuplicateInstructorApplicationException;
 import com.study.splearn.application.instructor.privided.InstructorApplication;
 import com.study.splearn.application.instructor.privided.InstructorApplyRequest;
 import com.study.splearn.application.instructor.privided.InstructorFinder;
 import com.study.splearn.application.instructor.required.InstructorRepository;
 import com.study.splearn.application.member.provided.MemberFinder;
 import com.study.splearn.domain.instructor.Instructor;
+import com.study.splearn.domain.member.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,9 +29,22 @@ public class InstructorModifyService implements InstructorApplication {
 	public Instructor apply(InstructorApplyRequest applyRequest) {
 		var member = memberFinder.find(applyRequest.memberId());
 
+		checkDuplicateInstructor(member);
+
 		var instructor = Instructor.apply(member);
 
-		return instructorRepository.save(instructor);
+		try {
+			return instructorRepository.save(instructor);
+		} catch (DataIntegrityViolationException e) {
+			throw new DuplicateInstructorApplicationException("회원은 중복해서 강사 신청을 할 수 없습니다.");
+		}
+	}
+
+	private void checkDuplicateInstructor(Member member) {
+		instructorFinder.findByMember(member.getId())
+			.ifPresent(instructor -> {
+				throw new DuplicateInstructorApplicationException("회원은 중복해서 강사 신청을 할 수 없습니다.");
+			});
 	}
 
 	@Override

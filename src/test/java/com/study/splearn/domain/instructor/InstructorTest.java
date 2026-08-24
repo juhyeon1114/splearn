@@ -14,13 +14,13 @@ class InstructorTest {
 	void test123() {
 		var member = MemberFixture.createActiveMember();
 
-		var instructor = Instructor.apply(member);
+		var instructor = InstructorFixture.createPendingInstructor(member);
 
 		assertThat(instructor.getMember()).isEqualTo(member);
 		assertThat(instructor.getStatus()).isEqualTo(InstructorStatus.PENDING);
 	}
-	
-	@Test 
+
+	@Test
 	@DisplayName("apply failed")
 	void test123123() {
 		var member = MemberFixture.createPendingMember();
@@ -33,10 +33,7 @@ class InstructorTest {
 	@Test
 	@DisplayName("approve")
 	void test123132132() {
-		var member = MemberFixture.createActiveMember();
-
-		var instructor = Instructor.apply(member);
-		instructor.approve();
+		var instructor = InstructorFixture.createApprovedInstructor();
 
 		assertThat(instructor.getStatus()).isEqualTo(InstructorStatus.ACTIVE);
 	}
@@ -44,10 +41,7 @@ class InstructorTest {
 	@Test
 	@DisplayName("approve failed")
 	void test1001() {
-		var member = MemberFixture.createActiveMember();
-
-		var instructor = Instructor.apply(member);
-		instructor.approve();
+		var instructor = InstructorFixture.createApprovedInstructor();
 
 		assertThatThrownBy(instructor::approve)
 			.isInstanceOf(IllegalStateException.class);
@@ -56,9 +50,8 @@ class InstructorTest {
 	@Test
 	@DisplayName("reject")
 	void test121212() {
-		var member = MemberFixture.createActiveMember();
+		var instructor = InstructorFixture.createPendingInstructor();
 
-		var instructor = Instructor.apply(member);
 		instructor.reject();
 
 		assertThat(instructor.getStatus()).isEqualTo(InstructorStatus.REJECTED);
@@ -67,9 +60,8 @@ class InstructorTest {
 	@Test
 	@DisplayName("reject failed")
 	void test123123123() {
-		var member = MemberFixture.createActiveMember();
+		var instructor = InstructorFixture.createPendingInstructor();
 
-		var instructor = Instructor.apply(member);
 		instructor.reject();
 
 		assertThatThrownBy(instructor::reject)

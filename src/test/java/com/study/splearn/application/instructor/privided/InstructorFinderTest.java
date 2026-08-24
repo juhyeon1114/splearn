@@ -5,7 +5,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.study.splearn.application.member.provided.MemberRegister;
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 
 @Transactional
 @SpringBootTest
-@AutoConfigureMockMvc
 @RequiredArgsConstructor
 class InstructorFinderTest {
 	final InstructorFinder instructorFinder;
