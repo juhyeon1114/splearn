@@ -27,6 +27,6 @@ public class InstructorQueryService implements InstructorFinder {
 
 	@Override
 	public Optional<Instructor> findByMember(Long memberId) {
-		return instructorRepository.findByMember_Id(memberId);
+		return instructorRepository.findByMemberId(memberId);
 	}
 }

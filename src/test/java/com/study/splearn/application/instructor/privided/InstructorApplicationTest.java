@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.study.splearn.application.instructor.required.InstructorRepository;
@@ -42,6 +43,17 @@ class InstructorApplicationTest {
 		var foundInstructor = instructorRepository.findById(instructor.getId()).orElseThrow();
 
 		assertThat(foundInstructor.getId()).isEqualTo(instructor.getId());
+	}
+
+	@Test
+	@DisplayName("duplicate apply")
+	void afdk() {
+		var activeMember = MemberFixture.createActiveMember();
+		var member = memberRepository.save(activeMember);
+
+		instructorApplication.apply(new InstructorApplyRequest(member.getId()));
+		assertThatThrownBy(() -> instructorApplication.apply(new InstructorApplyRequest(member.getId())))
+			.isInstanceOf(DataIntegrityViolationException.class);
 	}
 
 	@Test
