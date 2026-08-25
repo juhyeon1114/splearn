@@ -5,22 +5,19 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import com.study.splearn.domain.member.Member;
 
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 
 @DataJpaTest
+@RequiredArgsConstructor
 class MemberRepositoryTest {
-
-	@Autowired
-	MemberRepository memberRepository;
-
-	@Autowired
-	EntityManager entityManager;
+	final MemberRepository memberRepository;
+	final EntityManager entityManager;
 
 	@Test
 	@DisplayName("멤버 등록")

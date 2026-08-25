@@ -61,13 +61,15 @@ class ArchitectureTest {
 
 	@ArchTest
 	static final ArchRule 서비스는_애플리케이션에만 = classes()
-		.that().areAnnotatedWith(Service.class)
+		.that().areMetaAnnotatedWith(Service.class)
+		.and().areNotAnnotations()
 		.should().resideInAPackage(APPLICATION)
 		.as("@Service 클래스는 애플리케이션 패키지에 있어야 한다");
 
 	@ArchTest
 	static final ArchRule 컨트롤러는_어댑터에만 = classes()
-		.that().areAnnotatedWith(RestController.class).or().areAnnotatedWith(ControllerAdvice.class)
+		.that().areMetaAnnotatedWith(RestController.class).or().areMetaAnnotatedWith(ControllerAdvice.class)
+		.and().areNotAnnotations()
 		.should().resideInAPackage(ADAPTER)
 		.as("컨트롤러는 어댑터 패키지에 있어야 한다");
 

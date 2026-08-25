@@ -2,19 +2,14 @@ package com.study.splearn.application.instructor;
 
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-
 import com.study.splearn.application.instructor.privided.InstructorFinder;
 import com.study.splearn.application.instructor.required.InstructorRepository;
 import com.study.splearn.domain.instructor.Instructor;
+import com.study.splearn.support.stereotype.ApplicationService;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
-@Transactional
-@Validated
+@ApplicationService
 @RequiredArgsConstructor
 public class InstructorQueryService implements InstructorFinder {
 	private final InstructorRepository instructorRepository;

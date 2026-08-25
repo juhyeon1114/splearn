@@ -4,27 +4,23 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.study.splearn.adapter.webapi.dto.MemberRegisterResponse;
+import com.study.splearn.application.member.provided.MemberRegisterRequest;
 import com.study.splearn.application.member.required.MemberRepository;
 import com.study.splearn.domain.member.MemberFixture;
-import com.study.splearn.application.member.provided.MemberRegisterRequest;
 import com.study.splearn.domain.member.MemberStatus;
 import com.study.splearn.domain.shared.Email;
+import com.study.splearn.support.streotype.WebApiAdapterTest;
 
 import lombok.RequiredArgsConstructor;
 import tools.jackson.databind.ObjectMapper;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
+@WebApiAdapterTest
 @RequiredArgsConstructor
 public class MemberApiTest {
 

@@ -4,24 +4,17 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.study.splearn.SplearnTestConfiguration;
 import com.study.splearn.domain.member.MemberFixture;
+import com.study.splearn.support.streotype.ApplicationServiceTest;
 
-@SpringBootTest
-@Transactional
-@Import(SplearnTestConfiguration.class)
+import lombok.RequiredArgsConstructor;
+
+@ApplicationServiceTest
+@RequiredArgsConstructor
 class MemberAuthenticatorTest {
-
-	@Autowired
-	private MemberAuthenticator memberAuthenticator;
-
-	@Autowired
-	private MemberRegister memberRegister;
+	final MemberAuthenticator memberAuthenticator;
+	final MemberRegister memberRegister;
 
 	@Test
 	@DisplayName("로그인 성공")
@@ -66,8 +59,8 @@ class MemberAuthenticatorTest {
 			"somePassword123"
 		))).isInstanceOf(LoginFailedException.class);
 	}
-	
-	@Test 
+
+	@Test
 	@DisplayName("비밀번호 불일치 로그인 실패")
 	void test5995() {
 		var memberRegisterRequest = MemberFixture.createMemberRegisterRequest();

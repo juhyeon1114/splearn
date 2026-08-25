@@ -1,9 +1,6 @@
 package com.study.splearn.application.instructor;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
 import com.study.splearn.application.instructor.privided.DuplicateInstructorApplicationException;
 import com.study.splearn.application.instructor.privided.InstructorApplication;
@@ -13,12 +10,11 @@ import com.study.splearn.application.instructor.required.InstructorRepository;
 import com.study.splearn.application.member.provided.MemberFinder;
 import com.study.splearn.domain.instructor.Instructor;
 import com.study.splearn.domain.member.Member;
+import com.study.splearn.support.stereotype.ValidatedApplicationService;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
-@Transactional
-@Validated
+@ValidatedApplicationService
 @RequiredArgsConstructor
 public class InstructorModifyService implements InstructorApplication {
 	private final InstructorRepository instructorRepository;

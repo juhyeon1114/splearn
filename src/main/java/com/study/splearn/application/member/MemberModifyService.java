@@ -1,29 +1,24 @@
 package com.study.splearn.application.member;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-
 import com.study.splearn.application.member.provided.MemberFinder;
 import com.study.splearn.application.member.provided.MemberRegister;
+import com.study.splearn.application.member.provided.MemberRegisterRequest;
 import com.study.splearn.application.member.required.EmailSender;
 import com.study.splearn.application.member.required.MemberRepository;
 import com.study.splearn.domain.member.DuplicateEmailException;
 import com.study.splearn.domain.member.DuplicateProfileException;
 import com.study.splearn.domain.member.Member;
 import com.study.splearn.domain.member.MemberInfoUpdateRequest;
-import com.study.splearn.application.member.provided.MemberRegisterRequest;
 import com.study.splearn.domain.member.PasswordEncoder;
 import com.study.splearn.domain.member.Profile;
 import com.study.splearn.domain.shared.Email;
+import com.study.splearn.support.stereotype.ValidatedApplicationService;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 
-@Validated
-@Service
-@Transactional
+@ValidatedApplicationService
 @RequiredArgsConstructor
 public class MemberModifyService implements MemberRegister {
 

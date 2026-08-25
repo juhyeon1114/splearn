@@ -2,16 +2,16 @@ package com.study.splearn.adapter.webapi;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.study.splearn.adapter.webapi.dto.MemberRegisterResponse;
 import com.study.splearn.application.member.provided.MemberRegister;
 import com.study.splearn.application.member.provided.MemberRegisterRequest;
+import com.study.splearn.support.stereotype.WebApiAdapter;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@RestController
+@WebApiAdapter
 @RequiredArgsConstructor
 public class MemberApi {
 

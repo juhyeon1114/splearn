@@ -4,24 +4,20 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.study.splearn.SplearnTestConfiguration;
 import com.study.splearn.domain.member.DuplicateEmailException;
 import com.study.splearn.domain.member.DuplicateProfileException;
 import com.study.splearn.domain.member.MemberFixture;
 import com.study.splearn.domain.member.MemberStatus;
+import com.study.splearn.support.streotype.ApplicationServiceTest;
 
 import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 
-@SpringBootTest
-@Transactional // 개별 테스트 종료 후, 트랜잭션 롤백
-@Import(SplearnTestConfiguration.class)
-record MemberRegisterTest(
-	MemberRegister memberRegister
-) {
+@ApplicationServiceTest
+@RequiredArgsConstructor
+class MemberRegisterTest {
+	final MemberRegister memberRegister;
 
 	@Test
 	@DisplayName("멤버 등록")

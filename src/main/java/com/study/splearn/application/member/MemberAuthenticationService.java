@@ -1,9 +1,5 @@
 package com.study.splearn.application.member;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-
 import com.study.splearn.application.member.provided.LoginFailedException;
 import com.study.splearn.application.member.provided.MemberAuthenticator;
 import com.study.splearn.application.member.provided.MemberLoginRequest;
@@ -11,13 +7,12 @@ import com.study.splearn.application.member.required.MemberRepository;
 import com.study.splearn.domain.member.Member;
 import com.study.splearn.domain.member.PasswordEncoder;
 import com.study.splearn.domain.shared.Email;
+import com.study.splearn.support.stereotype.ValidatedApplicationService;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+@ValidatedApplicationService
 @RequiredArgsConstructor
-@Validated
-@Transactional
 public class MemberAuthenticationService implements MemberAuthenticator {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;

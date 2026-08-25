@@ -4,9 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.study.splearn.application.instructor.required.InstructorRepository;
 import com.study.splearn.application.member.required.MemberRepository;
@@ -14,14 +11,13 @@ import com.study.splearn.domain.instructor.Instructor;
 import com.study.splearn.domain.instructor.InstructorFixture;
 import com.study.splearn.domain.instructor.InstructorStatus;
 import com.study.splearn.domain.member.MemberFixture;
+import com.study.splearn.support.streotype.ApplicationServiceTest;
 
 import lombok.RequiredArgsConstructor;
 
-@Transactional
-@SpringBootTest
+@ApplicationServiceTest
 @RequiredArgsConstructor
 class InstructorApplicationTest {
-
 	final InstructorApplication instructorApplication;
 	final InstructorRepository instructorRepository;
 	final MemberRepository memberRepository;
