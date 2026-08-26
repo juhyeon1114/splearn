@@ -9,8 +9,7 @@ import jakarta.persistence.Embeddable;
 public record Profile(
 	@Column(length = 15) String address
 ) {
-	private static final Pattern PROFILE_ADDRESS_PATTERN =
-		Pattern.compile("[a-z0-9]+");
+	private static final Pattern PROFILE_ADDRESS_PATTERN = Pattern.compile("[a-z0-9]+");
 
 	public Profile {
 		if (address == null || (!address.isEmpty() && !PROFILE_ADDRESS_PATTERN.matcher(address).matches())) {

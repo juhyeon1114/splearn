@@ -36,11 +36,13 @@ class MemberRepositoryTest {
 	@Test
 	@DisplayName("이메일 중복 시 등록 실패")
 	void test12() {
-		var member1 = Member.register(createMemberRegisterRequest().toInfo(), createPasswordEncoder());
+		var memberRegisterRequest = createMemberRegisterRequest();
+
+		var member1 = Member.register(memberRegisterRequest.toInfo(), createPasswordEncoder());
 		memberRepository.save(member1);
 		entityManager.flush();
 
-		var member2 = Member.register(createMemberRegisterRequest().toInfo(), createPasswordEncoder());
+		var member2 = Member.register(memberRegisterRequest.toInfo(), createPasswordEncoder());
 
 		assertThatThrownBy(() -> {
 			memberRepository.save(member2);

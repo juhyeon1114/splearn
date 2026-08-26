@@ -32,9 +32,11 @@ class MemberRegisterTest {
 	@Test
 	@DisplayName("이메일 중복 테스트")
 	void test1290() {
-		memberRegister.register(MemberFixture.createMemberRegisterRequest());
+		var memberRegisterRequest = MemberFixture.createMemberRegisterRequest();
 
-		assertThatThrownBy(() -> memberRegister.register(MemberFixture.createMemberRegisterRequest()))
+		memberRegister.register(memberRegisterRequest);
+
+		assertThatThrownBy(() -> memberRegister.register(memberRegisterRequest))
 			.isInstanceOf(DuplicateEmailException.class);
 	}
 
@@ -68,32 +70,37 @@ class MemberRegisterTest {
 	@Test
 	@DisplayName("멤버 정보 수정")
 	void test123123123() {
-		var member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
+		var memberRegisterRequest = MemberFixture.createMemberRegisterRequest();
+		var memberInfoUpdateRequest = MemberFixture.createMemberInfoUpdateRequest();
+
+		var member = memberRegister.register(memberRegisterRequest);
 
 		memberRegister.activate(member.getId());
 
-		memberRegister.updateInfo(member.getId(), MemberFixture.createMemberInfoUpdateRequest());
+		memberRegister.updateInfo(member.getId(), memberInfoUpdateRequest);
 
-		assertThat(member.getNickname()).isEqualTo(MemberFixture.MEMBER_NICKNAME);
-		assertThat(member.getDetail().getProfile().address()).isEqualTo(MemberFixture.MEMBER_PROFILE_ADDRESS);
-		assertThat(member.getDetail().getIntroduction()).isEqualTo(MemberFixture.MEMBER_INTRODUCTION);
+		assertThat(member.getNickname()).isEqualTo(memberInfoUpdateRequest.nickname());
+		assertThat(member.getDetail().getProfile().address()).isEqualTo(memberInfoUpdateRequest.profileAddress());
+		assertThat(member.getDetail().getIntroduction()).isEqualTo(memberInfoUpdateRequest.introduction());
 	}
 
 	@Test
 	@DisplayName("멤버 정보 수정 실패")
 	void test12312223() {
 		var member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
-		var member2 = memberRegister.register(MemberFixture.createMemberRegisterRequest2());
+		var member2 = memberRegister.register(MemberFixture.createMemberRegisterRequest());
 
 		memberRegister.activate(member.getId());
 		memberRegister.activate(member2.getId());
 
-		memberRegister.updateInfo(member.getId(), MemberFixture.createMemberInfoUpdateRequest());
+		memberRegister.updateInfo(member.getId(), MemberFixture.createMemberInfoUpdateRequest("duplicate"));
 
-		assertThatThrownBy(() -> memberRegister.updateInfo(member2.getId(), MemberFixture.createMemberInfoUpdateRequest()))
+		assertThatThrownBy(
+			() -> memberRegister.updateInfo(member2.getId(), MemberFixture.createMemberInfoUpdateRequest("duplicate")))
 			.isInstanceOf(DuplicateProfileException.class);
 
-		memberRegister.updateInfo(member.getId(), MemberFixture.createMemberInfoUpdateRequest2());
+		// 자신의 프로필 주소를 그대로 유지하는 것은 허용
+		memberRegister.updateInfo(member.getId(), MemberFixture.createMemberInfoUpdateRequest("duplicate"));
 	}
 
 	@Test

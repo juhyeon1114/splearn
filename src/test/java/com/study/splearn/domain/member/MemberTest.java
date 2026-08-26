@@ -87,12 +87,14 @@ class MemberTest {
 	@Test
 	@DisplayName("비밀번호 검증")
 	void test129() {
+		var password = memberRegisterRequest.password();
+
 		var member = Member.register(
 			memberRegisterRequest.toInfo(),
 			passwordEncoder
 		);
 
-		assertThat(member.verifyPassword("password", passwordEncoder)).isTrue();
+		assertThat(member.verifyPassword(password, passwordEncoder)).isTrue();
 		assertThat(member.verifyPassword("wrong", passwordEncoder)).isFalse();
 	}
 
@@ -137,16 +139,18 @@ class MemberTest {
 	@Test
 	@DisplayName("업데이트 Info")
 	void test112312() {
+		var memberInfoUpdateRequest = MemberFixture.createMemberInfoUpdateRequest();
+
 		var member = Member.register(
 			memberRegisterRequest.toInfo(),
 			passwordEncoder
 		);
 		member.activate();
-		member.updateInfo(MemberFixture.createMemberInfoUpdateRequest());
+		member.updateInfo(memberInfoUpdateRequest);
 
-		assertThat(member.getNickname()).isEqualTo(MemberFixture.MEMBER_NICKNAME);
-		assertThat(member.getDetail().getProfile().address()).isEqualTo(MemberFixture.MEMBER_PROFILE_ADDRESS);
-		assertThat(member.getDetail().getIntroduction()).isEqualTo(MemberFixture.MEMBER_INTRODUCTION);
+		assertThat(member.getNickname()).isEqualTo(memberInfoUpdateRequest.nickname());
+		assertThat(member.getDetail().getProfile().address()).isEqualTo(memberInfoUpdateRequest.profileAddress());
+		assertThat(member.getDetail().getIntroduction()).isEqualTo(memberInfoUpdateRequest.introduction());
 	}
 
 	@Test

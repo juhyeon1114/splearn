@@ -1,30 +1,20 @@
 package com.study.splearn.domain.member;
 
+import org.instancio.Instancio;
+import org.instancio.Select;
+
 import com.study.splearn.application.member.provided.MemberRegisterRequest;
 
 public class MemberFixture {
 
-	public static final String MEMBER_NICKNAME = "newNickname";
-	public static final String MEMBER_PROFILE_ADDRESS = "profile123";
-	public static final String MEMBER_INTRODUCTION = "자기소개";
-	public static final String MEMBER_NICKNAME_2 = "newNickname2";
-	public static final String MEMBER_PROFILE_ADDRESS_2 = "profile1232";
-	public static final String MEMBER_INTRODUCTION_2 = "자기소개2";
-
 	public static MemberRegisterRequest createMemberRegisterRequest() {
-		return createMemberRegisterRequest("test@test.com");
-	}
-
-	public static MemberRegisterRequest createMemberRegisterRequest2() {
-		return createMemberRegisterRequest("test2@test.com");
+		return createMemberRegisterRequest(Instancio.gen().net().email().get());
 	}
 
 	public static MemberRegisterRequest createMemberRegisterRequest(String email) {
-		return new MemberRegisterRequest(
-			email,
-			"nickname",
-			"password"
-		);
+		return Instancio.of(MemberRegisterRequest.class)
+			.set(Select.field(MemberRegisterRequest::email), email)
+			.create();
 	}
 
 	public static PasswordEncoder createPasswordEncoder() {
@@ -42,11 +32,19 @@ public class MemberFixture {
 	}
 
 	public static MemberInfoUpdateRequest createMemberInfoUpdateRequest() {
-		return new MemberInfoUpdateRequest(MEMBER_NICKNAME, MEMBER_PROFILE_ADDRESS, MEMBER_INTRODUCTION);
+		return Instancio.of(MemberInfoUpdateRequest.class)
+			.generate(
+				Select.field(MemberInfoUpdateRequest::profileAddress),
+				// Instancio 텍스트 패턴 토큰: #c = 소문자, #d = 숫자
+				gen -> gen.text().pattern("#c#c#c#c#c#d#d#d")
+			)
+			.create();
 	}
 
-	public static MemberInfoUpdateRequest createMemberInfoUpdateRequest2() {
-		return new MemberInfoUpdateRequest(MEMBER_NICKNAME_2, MEMBER_PROFILE_ADDRESS_2, MEMBER_INTRODUCTION_2);
+	public static MemberInfoUpdateRequest createMemberInfoUpdateRequest(String profileAddress) {
+		return Instancio.of(MemberInfoUpdateRequest.class)
+			.set(Select.field(MemberInfoUpdateRequest::profileAddress), profileAddress)
+			.create();
 	}
 
 	public static Member createPendingMember() {
