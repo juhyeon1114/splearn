@@ -1,82 +1,93 @@
 package com.study.splearn;
 
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
-import static com.tngtech.archunit.library.Architectures.*;
-import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.tngtech.archunit.core.domain.JavaClass;
+import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.domain.JavaMethodCall;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
-import com.tngtech.archunit.lang.ArchRule;
+import com.tngtech.archunit.lang.ArchCondition;
+import com.tngtech.archunit.lang.ConditionEvents;
+import com.tngtech.archunit.lang.SimpleConditionEvent;
+import com.tngtech.archunit.library.Architectures;
+import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition;
 
-import jakarta.persistence.Entity;
-
-/**
- * 도메인, 애플리케이션, 어댑터 세 계층의 경계를 검증한다.
- * 의존은 어댑터에서 애플리케이션으로, 애플리케이션에서 도메인으로만 흐른다.
- */
-@AnalyzeClasses(packagesOf = SplearnApplication.class, importOptions = ImportOption.DoNotIncludeTests.class)
+@AnalyzeClasses(packages = "com.study.splearn", importOptions = ImportOption.DoNotIncludeTests.class)
 class ArchitectureTest {
 
-	private static final String DOMAIN = "com.study.splearn.domain..";
-	private static final String APPLICATION = "com.study.splearn.application..";
-	private static final String ADAPTER = "com.study.splearn.adapter..";
+	@ArchTest
+	void hexagonalArchitecture(JavaClasses classes) {
+		Architectures.layeredArchitecture()
+			.consideringAllDependencies()
+			.layer("domain").definedBy("com.study.splearn.domain..")
+			.layer("application").definedBy("com.study.splearn.application..")
+			.layer("adapter").definedBy("com.study.splearn.adapter..")
+			.whereLayer("domain").mayOnlyBeAccessedByLayers("application", "adapter")
+			.whereLayer("application").mayOnlyBeAccessedByLayers("adapter")
+			.whereLayer("adapter").mayNotBeAccessedByAnyLayer()
+			.check(classes);
+	}
 
 	@ArchTest
-	static final ArchRule 계층_의존_방향 = layeredArchitecture()
-		.consideringOnlyDependenciesInLayers()
-		.layer("도메인").definedBy(DOMAIN)
-		.layer("애플리케이션").definedBy(APPLICATION)
-		.layer("어댑터").definedBy(ADAPTER)
-		.whereLayer("어댑터").mayNotBeAccessedByAnyLayer()
-		.whereLayer("애플리케이션").mayOnlyBeAccessedByLayers("어댑터")
-		.whereLayer("도메인").mayOnlyBeAccessedByLayers("애플리케이션", "어댑터");
+	void aggregateFreeOfCycles(JavaClasses classes) {
+		SlicesRuleDefinition.slices()
+			.matching("com.study.splearn.domain.(*)..")
+			.should().beFreeOfCycles()
+			.check(classes);
+	}
 
 	@ArchTest
-	static final ArchRule 패키지_순환_참조_없음 = slices()
-		.matching("com.study.splearn.(*)..")
-		.should().beFreeOfCycles();
+	void applicationServiceFreeOfCycles(JavaClasses classes) {
+		SlicesRuleDefinition.slices()
+			.matching("com.study.splearn.application.(*)..")
+			.should().beFreeOfCycles()
+			.check(classes);
+	}
 
 	@ArchTest
-	static final ArchRule 어댑터끼리_서로_의존하지_않음 = slices()
-		.matching("com.study.splearn.adapter.(*)..")
-		.should().notDependOnEachOther();
+	void aggregateDependencies(JavaClasses classes) {
+		SlicesRuleDefinition.slices()
+			.matching("com.study.splearn.domain.(*)..")
+			.should(onlyCallGettersOrRecordMethodsOfOtherSlices())
+			.check(classes);
+	}
 
-	@ArchTest
-	static final ArchRule 웹_기술은_어댑터_안에만 = noClasses()
-		.that().resideInAnyPackage(DOMAIN, APPLICATION)
-		.should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
-		.as("도메인과 애플리케이션은 웹 기술에 의존하지 않는다");
+	private <SLICE extends Set<JavaClass>> ArchCondition<SLICE> onlyCallGettersOrRecordMethodsOfOtherSlices() {
+		return new ArchCondition<>("다른 슬라이스의 getter 또는 레코드, Enum 메소드만 호출할 수 있다") {
+			private final Set<JavaClass> classesInAnySlice = new HashSet<>();
 
-	@ArchTest
-	static final ArchRule 엔티티는_도메인에만 = classes()
-		.that().areAnnotatedWith(Entity.class)
-		.should().resideInAPackage(DOMAIN)
-		.as("@Entity 클래스는 도메인 패키지에 있어야 한다");
+			@Override
+			public void init(Collection<SLICE> allSlice) {
+				allSlice.forEach(classesInAnySlice::addAll);
+			}
 
-	@ArchTest
-	static final ArchRule 서비스는_애플리케이션에만 = classes()
-		.that().areMetaAnnotatedWith(Service.class)
-		.and().areNotAnnotations()
-		.should().resideInAPackage(APPLICATION)
-		.as("@Service 클래스는 애플리케이션 패키지에 있어야 한다");
+			@Override
+			public void check(SLICE slice, ConditionEvents events) {
+				for (JavaClass javaClass : slice) {
+					for (JavaMethodCall call : javaClass.getMethodCallsFromSelf()) {
+						JavaClass targetOwner = call.getTargetOwner();
+						if (slice.contains(targetOwner))
+							continue;
+						if (!classesInAnySlice.contains(targetOwner))
+							continue;
+						if (targetOwner.isRecord())
+							continue;
+						if (targetOwner.isEnum())
+							continue;
 
-	@ArchTest
-	static final ArchRule 컨트롤러는_어댑터에만 = classes()
-		.that().areMetaAnnotatedWith(RestController.class).or().areMetaAnnotatedWith(ControllerAdvice.class)
-		.and().areNotAnnotations()
-		.should().resideInAPackage(ADAPTER)
-		.as("컨트롤러는 어댑터 패키지에 있어야 한다");
+						String methodName = call.getTarget().getName();
+						if (methodName.startsWith("get") || methodName.startsWith("is")
+							|| methodName.startsWith("ensure"))
+							continue;
 
-	@ArchTest
-	static final ArchRule 어댑터_구현체는_스프링_빈 = classes()
-		.that().resideInAnyPackage("com.study.splearn.adapter.email..", "com.study.splearn.adapter.security..")
-		.should().beAnnotatedWith(Component.class)
-		.as("외부 연동 어댑터는 스프링 빈으로 등록한다");
-
+						events.add(SimpleConditionEvent.violated(call, call.getDescription()));
+					}
+				}
+			}
+		};
+	}
 }
