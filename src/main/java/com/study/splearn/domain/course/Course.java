@@ -1,9 +1,10 @@
 package com.study.splearn.domain.course;
 
 import static java.util.Objects.*;
+import static org.springframework.util.Assert.*;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import com.study.splearn.domain.AbstractEntity;
 import com.study.splearn.domain.instructor.Instructor;
@@ -27,17 +28,17 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Course extends AbstractEntity {
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	Instructor instructor;
+	private Instructor instructor;
 
 	@Column(nullable = false, length = 100)
-	String title;
+	private String title;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 20)
-	CourseStatus status;
+	private CourseStatus status;
 
 	@OneToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	CourseDetail detail;
+	private CourseDetail detail;
 
 	public Course(Instructor instructor, String title, @Nullable String description) {
 		instructor.ensureActive();
@@ -50,20 +51,21 @@ public class Course extends AbstractEntity {
 	}
 
 	public void submitForReview() {
-		Assert.state(this.status == CourseStatus.DRAFT, "DRAFT 상태가 아님");
+		state(this.status == CourseStatus.DRAFT, "DRAFT 상태가 아님");
+		state(StringUtils.hasText(this.detail.getDescription()), "강의 소개가 등록되어 있지 않음");
 
 		this.status = CourseStatus.IN_REVIEW;
 	}
 
 	public void publish() {
-		Assert.state(this.status == CourseStatus.IN_REVIEW, "IN_REVIEW 상태가 아님");
+		state(this.status == CourseStatus.IN_REVIEW, "IN_REVIEW 상태가 아님");
 
 		this.status = CourseStatus.PUBLISHED;
 		this.detail.publish();
 	}
 
 	public void archive() {
-		Assert.state(this.status == CourseStatus.PUBLISHED, "PUBLISHED 상태가 아님");
+		state(this.status == CourseStatus.PUBLISHED, "PUBLISHED 상태가 아님");
 
 		this.status = CourseStatus.ARCHIVED;
 		this.detail.archive();
@@ -74,6 +76,11 @@ public class Course extends AbstractEntity {
 	}
 
 	public void ensurePublished() {
-		Assert.state(this.isPublished(), "PUBLISHED 상태가 아님");
+		state(this.isPublished(), "PUBLISHED 상태가 아님");
+	}
+
+	public void updateInfo(CourseUpdateInfo updateInfo) {
+		this.title = requireNonNull(updateInfo.title());
+		this.detail.updateInfo(updateInfo);
 	}
 }

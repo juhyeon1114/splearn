@@ -38,8 +38,20 @@ class CourseTest {
 		var course = CourseFixture.createCourse();
 
 		course.submitForReview();
+		course.updateInfo(new CourseUpdateInfo("title", "desc"));
 
 		assertThat(course.getStatus()).isEqualTo(CourseStatus.IN_REVIEW);
+	}
+
+	@Test
+	@DisplayName("submitForReviewFailed")
+	void fafaads() {
+		var instructor = InstructorFixture.createApprovedInstructor();
+
+		var course = new Course(instructor, "title", null);
+
+		Assertions.assertThatThrownBy(course::submitForReview)
+			.isInstanceOf(IllegalStateException.class);
 	}
 
 	@Test
@@ -55,7 +67,7 @@ class CourseTest {
 	}
 
 	@Test
-	@DisplayName("")
+	@DisplayName("archive")
 	void afdssadfasdf() {
 		var course = CourseFixture.createCourse();
 		course.submitForReview();
@@ -66,6 +78,18 @@ class CourseTest {
 		assertThat(course.getStatus()).isEqualTo(CourseStatus.ARCHIVED);
 		assertThat(course.getDetail().getPublishedAt()).isNotNull();
 		assertThat(course.getDetail().getArchivedAt()).isNotNull();
+	}
+
+	@Test
+	@DisplayName("updateInfo")
+	void upasdoif() {
+		var course = CourseFixture.createCourse();
+		var updateInfo = new CourseUpdateInfo("new title", "new description");
+
+		course.updateInfo(updateInfo);
+
+		assertThat(course.getTitle()).isEqualTo(updateInfo.title());
+		assertThat(course.getDetail().getDescription()).isEqualTo(updateInfo.description());
 	}
 
 }
