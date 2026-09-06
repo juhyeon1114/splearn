@@ -8,8 +8,12 @@ import java.time.LocalDateTime;
 import org.instancio.Instancio;
 import org.jspecify.annotations.Nullable;
 
+import com.study.splearn.application.course.provided.CourseCreateRequest;
+import com.study.splearn.application.course.provided.CourseInfoUpdateRequest;
 import com.study.splearn.domain.instructor.Instructor;
 import com.study.splearn.domain.instructor.InstructorFixture;
+
+import jakarta.validation.Valid;
 
 public class CourseFixture {
 
@@ -37,4 +41,22 @@ public class CourseFixture {
 		return createCourse(instructor, null);
 	}
 
+	public static @Valid CourseCreateRequest createCourseCreateRequest(Instructor instructor, @Nullable String title) {
+		return Instancio.of(CourseCreateRequest.class)
+			.set(field(CourseCreateRequest::instructorId), instructor.getId())
+			.set(field(CourseCreateRequest::title), title == null ? gen().string().minLength(2).maxLength(100).get() : title)
+			.set(field(CourseCreateRequest::description), gen().string().maxLength(500).get())
+			.create();
+	}
+
+	public static @Valid CourseCreateRequest createCourseCreateRequest(Instructor instructor) {
+		return createCourseCreateRequest(instructor, null);
+	}
+
+	public static @Valid CourseInfoUpdateRequest createCourseUpdateRequest(@Nullable String title) {
+		return Instancio.of(CourseInfoUpdateRequest.class)
+			.set(field(CourseInfoUpdateRequest::title), title == null ? gen().string().minLength(2).maxLength(100).get() : title)
+			.set(field(CourseInfoUpdateRequest::description), gen().string().maxLength(500).get())
+			.create();
+	}
 }

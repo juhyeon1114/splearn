@@ -30,7 +30,7 @@ class CourseValidatorTest extends BaseApplicationServiceTest {
 	}
 
 	@Test
-	void titleDuplication() {
+	void titleDuplicationForCreate() {
 		var course1 = courseRepository.save(CourseFixture.createCourse(instructor1, "Clean spring"));
 		var course2 = courseRepository.save(CourseFixture.createCourse(instructor2, "Clean Code"));
 
@@ -48,6 +48,25 @@ class CourseValidatorTest extends BaseApplicationServiceTest {
 
 		// Instructor가 다른 경우에는 제목이 중복되도 됨
 		courseValidator.validateForCreate(instructor2, new CourseCreateRequest(instructor2.getId(), "Clean spring", null));
+	}
+
+	@Test
+	void testDuplicationForUpdate() {
+		var course1_1 = courseRepository.save(CourseFixture.createCourse(instructor1, "Clean spring"));
+		var course1_2 = courseRepository.save(CourseFixture.createCourse(instructor1, "Clean Code"));
+		var course2_1 = courseRepository.save(CourseFixture.createCourse(instructor2, "Clean spring"));
+
+		// OK
+		courseValidator.validateForUpdate(course1_1, CourseFixture.createCourseUpdateRequest(course1_1.getTitle()));
+
+		// 중복 발생
+		assertThatThrownBy(
+			() -> courseValidator.validateForUpdate(course1_1, CourseFixture.createCourseUpdateRequest(course1_2.getTitle())))
+			.isInstanceOfSatisfying(
+				ValidationException.class, e -> {
+					assertThat(e.getErrors().size()).isEqualTo(1);
+				}
+			);
 	}
 
 }

@@ -9,6 +9,7 @@ import com.study.splearn.application.course.required.CourseRepository;
 import com.study.splearn.application.instructor.privided.InstructorFinder;
 import com.study.splearn.domain.course.Course;
 import com.study.splearn.support.stereotype.ValidatedApplicationService;
+import com.study.splearn.support.stereotype.ValidationException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,17 +22,22 @@ public class CourseModifyService implements CourseCreator {
 	private final InstructorFinder instructorFinder;
 
 	@Override
-	public Course create(CourseCreateRequest createRequest) {
-		// instructor 찾기
-		// validate
-		// 생성
-
+	public Course create(CourseCreateRequest createRequest) throws ValidationException {
 		var instructor = instructorFinder.find(createRequest.instructorId());
+
+		courseValidator.validateForCreate(instructor, createRequest);
+
 		return courseRepository.save(new Course(instructor, createRequest.title(), createRequest.description()));
 	}
 
 	@Override
-	public Course updateInfo(Long courseId, CourseInfoUpdateRequest updateRequest) {
-		return null;
+	public Course updateInfo(Long courseId, CourseInfoUpdateRequest updateRequest) throws ValidationException {
+		var course = courseFinder.find(courseId);
+
+		courseValidator.validateForUpdate(course, updateRequest);
+
+		course.updateInfo(updateRequest.toInfo());
+
+		return courseRepository.save(course);
 	}
 }
