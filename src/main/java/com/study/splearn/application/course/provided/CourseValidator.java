@@ -8,4 +8,10 @@ public interface CourseValidator {
 	void validateForCreate(Instructor instructor, CourseCreateRequest createRequest) throws ValidationException;
 
 	void validateForUpdate(Course course, CourseInfoUpdateRequest updateRequest);
+
+	void validateForReview(Course course);
+
+	void validateForPublish(Course course);
+
+	void validateForArchive(Course course);
 }

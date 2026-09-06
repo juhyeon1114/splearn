@@ -47,6 +47,21 @@ public class CourseValidationService implements CourseValidator {
 		}
 	}
 
+	@Override
+	public void validateForReview(Course course) {
+		// todo
+	}
+
+	@Override
+	public void validateForPublish(Course course) {
+		// todo
+	}
+
+	@Override
+	public void validateForArchive(Course course) {
+		// todo
+	}
+
 	private void checkBannedWords(String title, List<String> errors) {
 		// todo
 	}

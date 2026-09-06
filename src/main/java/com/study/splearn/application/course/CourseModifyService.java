@@ -4,6 +4,7 @@ import com.study.splearn.application.course.provided.CourseCreateRequest;
 import com.study.splearn.application.course.provided.CourseCreator;
 import com.study.splearn.application.course.provided.CourseFinder;
 import com.study.splearn.application.course.provided.CourseInfoUpdateRequest;
+import com.study.splearn.application.course.provided.CoursePublisher;
 import com.study.splearn.application.course.provided.CourseValidator;
 import com.study.splearn.application.course.required.CourseRepository;
 import com.study.splearn.application.instructor.privided.InstructorFinder;
@@ -15,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @ValidatedApplicationService
 @RequiredArgsConstructor
-public class CourseModifyService implements CourseCreator {
+public class CourseModifyService implements CourseCreator, CoursePublisher {
 	private final CourseRepository courseRepository;
 	private final CourseFinder courseFinder;
 	private final CourseValidator courseValidator;
@@ -37,6 +38,39 @@ public class CourseModifyService implements CourseCreator {
 		courseValidator.validateForUpdate(course, updateRequest);
 
 		course.updateInfo(updateRequest.toInfo());
+
+		return courseRepository.save(course);
+	}
+
+	@Override
+	public Course submitForReview(Long courseId) {
+		var course = courseFinder.find(courseId);
+
+		courseValidator.validateForReview(course);
+
+		course.submitForReview();
+
+		return courseRepository.save(course);
+	}
+
+	@Override
+	public Course publish(Long courseId) {
+		var course = courseFinder.find(courseId);
+
+		courseValidator.validateForPublish(course);
+
+		course.publish();
+
+		return courseRepository.save(course);
+	}
+
+	@Override
+	public Course archive(Long courseId) {
+		var course = courseFinder.find(courseId);
+
+		courseValidator.validateForArchive(course);
+
+		course.archive();
 
 		return courseRepository.save(course);
 	}
