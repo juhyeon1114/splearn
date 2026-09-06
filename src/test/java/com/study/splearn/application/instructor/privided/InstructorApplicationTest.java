@@ -6,25 +6,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.study.splearn.application.instructor.required.InstructorRepository;
-import com.study.splearn.application.member.required.MemberRepository;
 import com.study.splearn.domain.instructor.Instructor;
 import com.study.splearn.domain.instructor.InstructorFixture;
 import com.study.splearn.domain.instructor.InstructorStatus;
-import com.study.splearn.domain.member.MemberFixture;
 import com.study.splearn.support.streotype.ApplicationServiceTest;
+import com.study.splearn.support.test.BaseApplicationServiceTest;
 
 import lombok.RequiredArgsConstructor;
 
 @ApplicationServiceTest
 @RequiredArgsConstructor
-class InstructorApplicationTest {
+class InstructorApplicationTest extends BaseApplicationServiceTest {
 	final InstructorApplication instructorApplication;
 	final InstructorRepository instructorRepository;
-	final MemberRepository memberRepository;
 
 	private Instructor preparePendingInstructor() {
-		var activeMember = MemberFixture.createActiveMember();
-		var member = memberRepository.save(activeMember);
+		var member = prepareMember();
 
 		return instructorApplication.apply(InstructorFixture.createApplyRequest(member));
 	}
@@ -45,8 +42,7 @@ class InstructorApplicationTest {
 	@Test
 	@DisplayName("duplicate apply")
 	void afdk() {
-		var activeMember = MemberFixture.createActiveMember();
-		var member = memberRepository.save(activeMember);
+		var member = prepareMember();
 
 		instructorApplication.apply(InstructorFixture.createApplyRequest(member));
 
