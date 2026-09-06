@@ -22,6 +22,12 @@ public class InstructorFixture {
 		return instructor;
 	}
 
+	public static Instructor createApprovedInstructor(Member member) {
+		var instructor = createPendingInstructor(member);
+		instructor.approve();
+		return instructor;
+	}
+
 	public static InstructorApplyRequest createApplyRequest(Member member) {
 		return new InstructorApplyRequest(member.getId());
 	}

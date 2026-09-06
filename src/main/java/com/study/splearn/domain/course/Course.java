@@ -17,11 +17,17 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Table(
+	name = "course",
+	uniqueConstraints = @UniqueConstraint(name = "uk_course_instructor_title", columnNames = {"instructor_id", "title"})
+)
 @Entity
 @Getter
 @ToString(callSuper = true, exclude = {})
