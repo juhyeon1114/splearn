@@ -59,4 +59,13 @@ public class CourseFixture {
 			.set(field(CourseInfoUpdateRequest::description), gen().string().maxLength(500).get())
 			.create();
 	}
+
+	public static Course createPublishedCourse() {
+		var course = createCourse();
+		course.updateInfo(createCourseUpdateRequest(course.getTitle()).toInfo());
+		course.submitForReview();
+		course.publish();
+		return course;
+	}
+
 }

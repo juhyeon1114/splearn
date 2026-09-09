@@ -30,7 +30,7 @@ import lombok.ToString;
 )
 @Entity
 @Getter
-@ToString(callSuper = true, exclude = {})
+@ToString(callSuper = true, exclude = {"instructor"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Course extends AbstractEntity {
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
